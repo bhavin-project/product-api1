@@ -30,18 +30,35 @@ const saveProductsData = (data) => {
   fs.writeFileSync(dataPath, stringifyData);
 };
 
+const validateProductData = (data) => {
+  const { productId, productName, productDescription, isActive } = data;
+  const errors = {};
+  if (!productId) errors.productId = "Product ID must be provided.";
+  if (!productName) errors.productName = "Product Name must be provided.";
+  if (!productDescription) errors.productDescription = "Product Description must be provided.";
+  if (isActive === undefined || isActive === null) errors.isActive = "Product Active status must be provided.";
+  return errors;
+};
+
 export const insertProduct = (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       return res.status(500).send(err);
     }
+    const { productId, productName, productDescription, isActive } = req.body;
+
+    const validationErrors = validateProductData({ productId, productName, productDescription, isActive });
+    if (Object.keys(validationErrors).length > 0) {
+      return res.status(400).send(validationErrors);
+    }
+
     const products = getProductsData();
     const newProduct = {
-      productId: req.body.productId,
-      productName: req.body.productName,
-      productDescription: req.body.productDescription,
+      productId,
+      productName,
+      productDescription,
       productImage: req.file ? `/public/images/${req.file.filename}` : "",
-      isActive: req.body.isActive,
+      isActive,
     };
     products.push(newProduct);
     saveProductsData(products);
@@ -59,16 +76,10 @@ export const getProductById = (req, res) => {
   }
 };
 
-export const getActiveProducts1 = (req, res) => {
-  console.log("All products:", products);
+export const getActiveProducts = (req, res) => {
   const products = getProductsData();
-  console.log("All products:", products);
-
   const activeProducts = products.filter((p) => p.isActive);
-  console.log("Active products:", activeProducts);
-
   const limitedActiveProducts = activeProducts.slice(0, 5);
-  console.log("Limited active products:", limitedActiveProducts);
 
   if (limitedActiveProducts.length === 0) {
     return res.status(200).send([]);
@@ -85,10 +96,17 @@ export const updateProduct = (req, res) => {
   if (productIndex === -1) {
     return res.status(404).send({ message: "Product not found" });
   }
+
   const updatedProduct = {
     ...products[productIndex],
     ...req.body,
   };
+
+  const validationErrors = validateProductData(updatedProduct);
+  if (Object.keys(validationErrors).length > 0) {
+    return res.status(400).send(validationErrors);
+  }
+
   products[productIndex] = updatedProduct;
   saveProductsData(products);
   res.status(200).send(updatedProduct);
