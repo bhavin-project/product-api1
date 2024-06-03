@@ -1,0 +1,37 @@
+[
+  {
+    "productId": "2",
+    "productName": "Smartphone",
+    "productDescription": "A latest model smartphone with all the modern features.",
+    "productImage": "/public/images/smartphone.jpg",
+    "isActive": true
+  },
+  {
+    "productId": "3",
+    "productName": "Headphones",
+    "productDescription": "Noise-cancelling over-ear headphones.",
+    "productImage": "/public/images/headphones.jpg",
+    "isActive": false
+  },
+  {
+    "productId": "4",
+    "productName": "Smartwatch",
+    "productDescription": "A smartwatch with various health tracking features.",
+    "productImage": "/public/images/smartwatch.jpg",
+    "isActive": true
+  },
+  {
+    "productId": "5",
+    "productName": "Camera",
+    "productDescription": "A DSLR camera for professional photography.",
+    "productImage": "/public/images/camera.jpg",
+    "isActive": false
+  },
+  {
+    "productId": "6",
+    "productName": "Tablet",
+    "productDescription": "A tablet for everyday use.",
+    "productImage": "/public/images/1717355389547.jpg",
+    "isActive": "true"
+  }
+]
